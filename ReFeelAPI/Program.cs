@@ -1,8 +1,9 @@
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph.ExternalConnectors;
 using ReFeelCourtesy.Logging;
+using ReFeelRepository.iRepository;
 using ReFeelRepository.Models;
+using ReFeelRepository.Repository;
 //using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,9 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 //    .WriteTo.File("log/ReFeelAPILogs.txt", rollingInterval: RollingInterval.Day).CreateLogger();
 //builder.Host.UseSerilog();
 
-builder.Services.AddDbContext<RefeelContext>(x => {
-    x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
- });
+builder.Services.AddDbContext<RefeelContext>(option => { option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")); });
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddAutoMapper(typeof(MappingConfig));
 builder.Services.AddControllers( option =>
 {

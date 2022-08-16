@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using ReFeelRepository.Models.Entitites;
-using ReFeelRepository.Models;
 using ReFeelRepository.Models.DTo.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.JsonPatch;
+using ReFeelRepository.iRepository;
 
 namespace ReFeelWebApi.Controllers
 {
@@ -19,10 +13,10 @@ namespace ReFeelWebApi.Controllers
     [Route("[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly RefeelContext _context;
+        private readonly IUserRepository _context;
         private readonly IMapper _mapper;
 
-        public UsersController(RefeelContext context, IMapper mapper)
+        public UsersController(IUserRepository context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -32,7 +26,7 @@ namespace ReFeelWebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDTo>>> GetUser()
         {
-            IEnumerable<User> userList = await _context.User.ToListAsync();
+            IEnumerable<User> userList = await _context.GetAllAsync();
             return Ok(_mapper.Map<List<UserDTo>>(userList));
         }
 
@@ -45,7 +39,7 @@ namespace ReFeelWebApi.Controllers
                 return BadRequest();
             }
 
-            var user = await _context.User.FirstOrDefaultAsync(x => x.UserId == id);
+            var user = await _context.GetAsync(x => x.UserId == id);
             if (user == null)
             {
                 return NotFound();
@@ -56,7 +50,7 @@ namespace ReFeelWebApi.Controllers
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "UpdatePartialUser")]
         public async Task<IActionResult> UpdatePartialUser(int id, JsonPatchDocument<UserUpdateDTo> updateDTo)
         {
             if (updateDTo != null && id == 0)
@@ -64,7 +58,7 @@ namespace ReFeelWebApi.Controllers
                 return BadRequest();
             }
 
-            var user = await _context.User.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == id);
+            var user = await _context.GetAsync(x => x.UserId == id, tracked:false);
 
             UserUpdateDTo userDTo = _mapper.Map<UserUpdateDTo>(user);
 
@@ -76,8 +70,7 @@ namespace ReFeelWebApi.Controllers
                 return BadRequest();
             }
 
-            _context.User.Update(model);
-            await _context.SaveChangesAsync();
+            await _context.UpdateAsync(model);
 
             if(!ModelState.IsValid)
             {
@@ -87,13 +80,31 @@ namespace ReFeelWebApi.Controllers
             return NoContent();
         }
 
+
+        // PUT: api/Users/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}", Name = "UpdateUser")]
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDTo updateDTo)
+        {
+            if (updateDTo != null ||  id != updateDTo.UserId)
+            {
+                return BadRequest();
+            }
+
+            User model = _mapper.Map<User>(updateDTo);
+
+            await _context.UpdateAsync(model);
+            return NoContent();
+        }
+
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<UserDTo>> CreateUser(UserCreateDTo createDTo)
         {
-            if (_context.User.Any(x => (x != null && x.Email.ToLower() == createDTo.Email.ToLower()
-                                                                 || (x != null && x.PhoneNumber == createDTo.PhoneNumber))))
+            var user = await _context.GetAsync(x => (x != null && x.Email.ToLower() == createDTo.Email.ToLower()
+                                                                 || (x != null && x.PhoneNumber == createDTo.PhoneNumber)));
+            if (user != null)
             {
                 ModelState.AddModelError("CreateUserError", "User already exists");
                 return BadRequest(ModelState);
@@ -105,12 +116,10 @@ namespace ReFeelWebApi.Controllers
                 return BadRequest(createDTo);
             }
 
-
             User model = _mapper.Map<User>(createDTo); 
 
 
-           await _context.AddAsync(model);
-           await _context.SaveChangesAsync();            
+           await _context.CreateAsync(model);        
 
             return CreatedAtRoute("GetUser", new { id = model.UserId }, model);
         }
@@ -119,21 +128,26 @@ namespace ReFeelWebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            if(id == 0)
             {
-                return NotFound();
+                BadRequest();
             }
 
-            _context.User.Remove(user);
-            await _context.SaveChangesAsync();
+            var user = await _context.GetAsync(x => x.UserId == id);
+            if(user == null)    
+            {
+                return NotFound();  
+            }
 
+            await _context.RemoveAsync(user);
             return NoContent();
+
+            //return NoContent();
         }
 
-        private bool UserExists(int id)
-        {
-            return _context.User.Any(e => e.UserId == id);
-        }
+        //private bool UserExists(int id)
+        //{
+        //    return _context.GetAsync(e => e.UserId == id);
+        //}
     }
 }
