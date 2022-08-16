@@ -149,10 +149,9 @@ namespace ReFeelWebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<APIResponse>> CreateUser(UserCreateDTo createDTo)
         {
-            var user = await _context.GetAsync(x => (x != null && x.Email.ToLower() == createDTo.Email.ToLower()
-                                                                 || (x != null && x.PhoneNumber == createDTo.PhoneNumber)));
             try { 
-            if (user != null)
+            if ( await _context.GetAsync(x => (x.Email.ToLower() == createDTo.Email.ToLower()) 
+                                                    || x.PhoneNumber.ToLower() == createDTo.PhoneNumber.ToLower()) != null)
             {
                 ModelState.AddModelError("CreateUserError", "User already exists");
                 return BadRequest(ModelState);
