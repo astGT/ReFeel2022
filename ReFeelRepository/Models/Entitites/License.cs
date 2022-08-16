@@ -3,22 +3,15 @@
 using System;
 using System.Collections.Generic;
 
-namespace ReFeelRepository.Models
+namespace ReFeelRepository.Models.Entitites
 {
     public partial class License
     {
-        public License()
-        {
-            Driver = new HashSet<Driver>();
-        }
-
         public int LicenseId { get; set; }
         public int LicenseNumber { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? ExpirationDate { get; set; }
         public string ReleasedBy { get; set; }
-
-        public virtual ICollection<Driver> Driver { get; set; }
     }
 }

@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ReFeelRepository.Models
+namespace ReFeelRepository.Models.Entitites
 {
     public partial class SysType
     {

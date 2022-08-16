@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ReFeelRepository.Data;
+using ReFeelRepository.Models.Entitites;
 using ReFeelRepository.Models;
 
 namespace ReFeelWebApi.Controllers

@@ -1,0 +1,107 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "RefeelContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": "",
+   "OutputContextPath": "Models",
+   "OutputPath": "Models\/Entitites",
+   "ProjectRootNamespace": "ReFeelRepository",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[Car]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[City]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Country]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[County]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Driver]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[DriverRating]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[GeoLocation]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[License]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Location]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Order]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Payment]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SysBrand]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SysModel]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SysRating]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SysType]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Trip]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[User]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ZipCode]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "DESKTOP-6KQ8MSH\\SQLEXPRESS.Refeel",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false
+}

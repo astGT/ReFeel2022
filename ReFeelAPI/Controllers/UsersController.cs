@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ReFeelRepository.Data;
+using ReFeelRepository.Models.Entitites;
 using ReFeelRepository.Models;
+using ReFeelRepository.Models.DTo.Entities;
+using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace ReFeelWebApi.Controllers
 {
@@ -17,59 +20,68 @@ namespace ReFeelWebApi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly RefeelContext _context;
+        private readonly IMapper _mapper;
 
-        public UsersController(RefeelContext context)
+        public UsersController(RefeelContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUser()
+        public async Task<ActionResult<IEnumerable<UserDTo>>> GetUser()
         {
-            return await _context.User.ToListAsync();
+            IEnumerable<User> userList = await _context.User.ToListAsync();
+            return Ok(_mapper.Map<List<UserDTo>>(userList));
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        [HttpGet("{id:int}", Name = "GetUser")]
+        public async Task<ActionResult<UserDTo>> GetUser(int id)
         {
-            var user = await _context.User.FindAsync(id);
+            if(id == 0)
+            {
+                return BadRequest();
+            }
 
+            var user = await _context.User.FirstOrDefaultAsync(x => x.UserId == id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            return user;
+            return Ok(_mapper.Map<UserDTo>(user));    
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
+        public async Task<IActionResult> UpdatePartialUser(int id, JsonPatchDocument<UserUpdateDTo> updateDTo)
         {
-            if (id != user.UserId)
+            if (updateDTo != null && id == 0)
             {
                 return BadRequest();
             }
 
-            _context.Entry(user).State = EntityState.Modified;
+            var user = await _context.User.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == id);
 
-            try
+            UserUpdateDTo userDTo = _mapper.Map<UserUpdateDTo>(user);
+
+            updateDTo.ApplyTo(userDTo, ModelState);
+            User model  = _mapper.Map<User>(userDTo);
+
+            if (userDTo == null)
             {
-                await _context.SaveChangesAsync();
+                return BadRequest();
             }
-            catch (DbUpdateConcurrencyException)
+
+            _context.User.Update(model);
+            await _context.SaveChangesAsync();
+
+            if(!ModelState.IsValid)
             {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return BadRequest(ModelState);
             }
 
             return NoContent();
@@ -78,12 +90,29 @@ namespace ReFeelWebApi.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<UserDTo>> CreateUser(UserCreateDTo createDTo)
         {
-            _context.User.Add(user);
-            await _context.SaveChangesAsync();
+            if (_context.User.Any(x => (x != null && x.Email.ToLower() == createDTo.Email.ToLower()
+                                                                 || (x != null && x.PhoneNumber == createDTo.PhoneNumber))))
+            {
+                ModelState.AddModelError("CreateUserError", "User already exists");
+                return BadRequest(ModelState);
 
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            }
+
+            if(createDTo == null)
+            {
+                return BadRequest(createDTo);
+            }
+
+
+            User model = _mapper.Map<User>(createDTo); 
+
+
+           await _context.AddAsync(model);
+           await _context.SaveChangesAsync();            
+
+            return CreatedAtRoute("GetUser", new { id = model.UserId }, model);
         }
 
         // DELETE: api/Users/5

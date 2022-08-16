@@ -3,13 +3,12 @@
 using System;
 using System.Collections.Generic;
 
-namespace ReFeelRepository.Models
+namespace ReFeelRepository.Models.Entitites
 {
     public partial class Car
     {
         public Car()
         {
-            Driver = new HashSet<Driver>();
             Trip = new HashSet<Trip>();
         }
 
@@ -19,7 +18,6 @@ namespace ReFeelRepository.Models
         public int SysModelId { get; set; }
         public int SysTypeId { get; set; }
 
-        public virtual ICollection<Driver> Driver { get; set; }
         public virtual ICollection<Trip> Trip { get; set; }
     }
 }

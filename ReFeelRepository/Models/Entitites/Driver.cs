@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ReFeelRepository.Models
+namespace ReFeelRepository.Models.Entitites
 {
     public partial class Driver
     {
@@ -14,9 +14,5 @@ namespace ReFeelRepository.Models
         public int CarId { get; set; }
         public DateTime CreationDate { get; set; }
         public bool? IsActive { get; set; }
-
-        public virtual Car Car { get; set; }
-        public virtual License License { get; set; }
-        public virtual User User { get; set; }
     }
 }

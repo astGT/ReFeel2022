@@ -1,0 +1,41 @@
+-- use database
+USE [Refeel];
+GO
+
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Trip' AND TABLE_SCHEMA = 'dbo')
+BEGIN
+   DROP TABLE [dbo].[Trip];
+END
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Trip](
+	[TripID] [int] IDENTITY(1,1) NOT NULL,	
+	[CarID] INT NOT NULL,
+	[PaymentID] INT NOT NULL,	
+	[LocationsID] INT NOT NULL, /*LocationsXTrip*/	--[StartLocationID] INT NOT NULL,--[EndLocationID] INT NOT NULL, [StartTime] timestamp NOT NULL,	[EndTime] timestamp NOT NULL,
+	[CreationDate] DATETIME default(getdate()) NOT NULL,
+	[SysRatingID] int,
+ CONSTRAINT [PK_Trip] PRIMARY KEY CLUSTERED 
+(
+	[TripID] ASC
+)
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+
+, CONSTRAINT FK_TripCar FOREIGN KEY (CarID)
+    REFERENCES [Car](CarID)
+
+, CONSTRAINT FK_TripPaymentID FOREIGN KEY (PaymentID)
+REFERENCES [Payment](PaymentID)
+
+) 
+
+
+GO
+
+
