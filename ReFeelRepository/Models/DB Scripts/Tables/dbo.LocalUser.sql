@@ -2,9 +2,9 @@
 USE [Refeel];
 GO
 
-IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'User' AND TABLE_SCHEMA = 'dbo')
+IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'LocalUser' AND TABLE_SCHEMA = 'dbo')
 BEGIN
-   DROP TABLE [dbo].[User];
+   DROP TABLE [dbo].[LocalUser];
 END
 GO
 
@@ -14,17 +14,20 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[User](
+CREATE TABLE [dbo].[LocalUser](
 	[UserID] [int] IDENTITY(1,1) NOT NULL,
-	[Firstname] nvarchar(50) NOT NULL,
-	[Lastname] nvarchar(50) NOT NULL,
-	[PasswordHash] [varbinary](max) NOT NULL,
-	[PasswordSalt] [varbinary](max) NOT NULL,
+	[Firstname] nvarchar(50)  NULL,
+	[Lastname] nvarchar(50)  NULL,
+	[UserName] nvarchar(50)  NULL,
+	[Role] nvarchar(50) null,
+	[Password] nvarchar(50) null,
+	[PasswordHash] [varbinary](max)  NULL,
+	[PasswordSalt] [varbinary](max)  NULL,
 	[ImageURL] nvarchar(200),
-	[CreationDate] datetime default(getdate()) NOT NULL,
-	[UpdateDate] datetime default(getdate()) NOT NULL,
+	[CreationDate] datetime default(getdate())  NULL,
+	[UpdateDate] datetime default(getdate())  NULL,
 	[PhoneNumber] nvarchar(35)  NULL, -- Will Include extension +40 etc which will provide countryID
-	[Email] NVARCHAR(320) NOT NULL
+	[Email] NVARCHAR(320)  NULL
  CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
 (
 	[UserID] ASC

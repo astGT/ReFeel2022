@@ -27,6 +27,7 @@ namespace ReFeelRepository.Models
         public virtual DbSet<DriverRating> DriverRating { get; set; }
         public virtual DbSet<GeoLocation> GeoLocation { get; set; }
         public virtual DbSet<License> License { get; set; }
+        public virtual DbSet<LocalUser> LocalUser { get; set; }
         public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<Payment> Payment { get; set; }
@@ -35,7 +36,6 @@ namespace ReFeelRepository.Models
         public virtual DbSet<SysRating> SysRating { get; set; }
         public virtual DbSet<SysType> SysType { get; set; }
         public virtual DbSet<Trip> Trip { get; set; }
-        public virtual DbSet<User> User { get; set; }
         public virtual DbSet<ZipCode> ZipCode { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -131,6 +131,40 @@ namespace ReFeelRepository.Models
                 entity.Property(e => e.FirstName).IsRequired();
 
                 entity.Property(e => e.LastName).IsRequired();
+            });
+
+            modelBuilder.Entity<LocalUser>(entity =>
+            {
+                entity.HasKey(e => e.UserId)
+                    .HasName("PK_User");
+
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
+                entity.Property(e => e.CreationDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Email).HasMaxLength(320);
+
+                entity.Property(e => e.Firstname).HasMaxLength(50);
+
+                entity.Property(e => e.ImageUrl)
+                    .HasMaxLength(200)
+                    .HasColumnName("ImageURL");
+
+                entity.Property(e => e.Lastname).HasMaxLength(50);
+
+                entity.Property(e => e.Password).HasMaxLength(50);
+
+                entity.Property(e => e.PhoneNumber).HasMaxLength(35);
+
+                entity.Property(e => e.Role).HasMaxLength(50);
+
+                entity.Property(e => e.UpdateDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.UserName).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Location>(entity =>
@@ -262,41 +296,6 @@ namespace ReFeelRepository.Models
                     .HasForeignKey(d => d.PaymentId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TripPaymentID");
-            });
-
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.Property(e => e.UserId).HasColumnName("UserID");
-
-                entity.Property(e => e.CreationDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
-
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(320);
-
-                entity.Property(e => e.Firstname)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.ImageUrl)
-                    .HasMaxLength(200)
-                    .HasColumnName("ImageURL");
-
-                entity.Property(e => e.Lastname)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.PasswordHash).IsRequired();
-
-                entity.Property(e => e.PasswordSalt).IsRequired();
-
-                entity.Property(e => e.PhoneNumber).HasMaxLength(35);
-
-                entity.Property(e => e.UpdateDate)
-                    .HasColumnType("datetime")
-                    .HasDefaultValueSql("(getdate())");
             });
 
             modelBuilder.Entity<ZipCode>(entity =>

@@ -9,8 +9,8 @@ namespace ReFeelRepository.Models
     {
         public MappingConfig()
         {
-            CreateMap<User, UserDTo>();
-            CreateMap<UserDTo, User>();
+            //CreateMap<LoginReponseDTO, UserDTo>();
+            //CreateMap<UserDTo, LoginReponseDTO>();
 
             CreateMap<UserDTo, UserCreateDTo>().ReverseMap();
             CreateMap<UserDTo, UserCreateDTo>().ReverseMap();

@@ -46,6 +46,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[LocalUser]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Location]",
          "ObjectType": 0
       },
@@ -75,10 +79,6 @@
       },
       {
          "Name": "[dbo].[Trip]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[User]",
          "ObjectType": 0
       },
       {
