@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ReFeelApp.LoginPage"
+            Title="HomePage"
+             Shell.NavBarIsVisible="False">
+    <StackLayout Padding="40" VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+        <Image Source="Refeel_Logo.jpg" WidthRequest="380" HeightRequest="380"></Image>
+        <Entry x:Name="txtUsername" Text="{Binding Username}" Placeholder="Email or Phone number" TextColor="Black"  PlaceholderColor="#24bfdc"></Entry>
+        <Entry x:Name="txtPassword" Text="{Binding Password}"  Placeholder="Password" IsPassword="True" TextColor="Black"  PlaceholderColor="#24bfdc"></Entry>
+        <Button
+                VerticalOptions ="Center"
+                Text="Login"
+                TextColor="#24bfdc"
+                BackgroundColor="Transparent"
+                BorderColor="#24bfdc"
+                BorderWidth="1.5"
+                CornerRadius="50"             
+                Command="{Binding LoginCommand}"
+            />
+        <Label HorizontalOptions="Center">
+            <Label.FormattedText>
+                <FormattedString>
+                    <Span Text="Don't have an account?" TextColor="#24bfdc"></Span>
+                    <Span Text="Register now! " TextColor="#24bfdc" FontAttributes="Bold" TextDecorations="Underline"></Span>
+                </FormattedString>
+            </Label.FormattedText>
+            <!--<Label.GestureRecognizers>
+                <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+            </Label.GestureRecognizers>-->
+        </Label>
+    </StackLayout>
+</ContentPage>
