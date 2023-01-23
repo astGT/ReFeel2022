@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ReFeelCourtesy\ReFeelCourtesy.csproj" />
-    <ProjectReference Include="..\ReFeelRepository\ReFeelRepository.csproj" />
+    <ProjectReference Include="..\ReFeelCourtesy\ReFeel.Courtesy.csproj" />
+    <ProjectReference Include="..\ReFeelRepository\ReFeel.Repository.csproj" />
   </ItemGroup>
 
 </Project>
